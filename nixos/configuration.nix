@@ -164,30 +164,6 @@ in
     description = "Carlo";
     shell = pkgs.fish;
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
-      prismlauncher
-      chromium
-      steam
-      spotify
-      audacity
-      gimp
-      rclone-browser
-      discord
-      keepassxc
-      obs-studio
-      ryujinx
-      libreoffice
-      betterdiscordctl
-      osu-lazer
-      cemu
-      obsidian
-      pspp
-      openai-whisper
-      dolphin-emu
-      unstable.yuzu-early-access
-      jupyter
-    #  thunderbird
-    ];
   };
 
   users.users.root = {
@@ -225,13 +201,13 @@ in
       pandas
       numpy
       chess
-      torch-bin
-      torchvision-bin
+      # torch-bin
+      # torchvision-bin
       colorama
       matplotlib
       scipy
-      tensorflowWithCuda
-      keras
+      # tensorflowWithCuda
+      # keras
       ipykernel
       setuptools
     ]))
@@ -271,6 +247,7 @@ in
     # cudatoolkit
     autorandr
     unstable.konsave
+    # yuzu-mainline
   ];
 
   environment.shells = with pkgs; [

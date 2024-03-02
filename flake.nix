@@ -9,9 +9,11 @@
     home-manager.url = "github:nix-community/home-manager/release-23.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+    plasma-manager.url = "github:pjones/plasma-manager";
+    plasma-manager.inputs.nixpkgs.follows = "nixpkgs";
+    plasma-manager.inputs.home-manager.follows = "home-manager";
     # TODO: Add any other flake you might need
     # hardware.url = "github:nixos/nixos-hardware";
-    mach-nix.url = "github:DavHau/mach-nix";
 
     # Shameless plug: looking for a way to nixify your themes and make
     # everything match nicely? Try nix-colors!
@@ -22,6 +24,7 @@
     self,
     nixpkgs,
     home-manager,
+    plasma-manager,
     ...
   } @ inputs: let
     inherit (self) outputs;

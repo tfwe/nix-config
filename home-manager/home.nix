@@ -13,7 +13,8 @@
     # inputs.nix-colors.homeManagerModule
 
     # You can also split up your configuration and import pieces of it here:
-    # ./nvim.nix
+    # inputs.plasma-manager.homeManagerModules.plasma-manager
+    # ./plasma.nix
   ];
 
   nixpkgs = {
@@ -42,6 +43,31 @@
   home = {
     username = "carlo";
     homeDirectory = "/home/carlo/";
+    packages = with pkgs; [
+      prismlauncher
+      chromium
+      steam
+      spotify
+      audacity
+      gimp
+      rclone-browser
+      discord
+      keepassxc
+      obs-studio
+      ryujinx
+      libreoffice
+      betterdiscordctl
+      osu-lazer
+      cemu
+      obsidian
+      pspp
+      openai-whisper
+      dolphin-emu
+      virtualbox
+      # yuzu-mainline
+      jupyter
+    #  thunderbird
+    ];
   };
 
   # Add stuff for your user as you see fit:
@@ -52,6 +78,12 @@
   programs.home-manager.enable = true;
   programs.git.enable = true;
 
+  programs.plasma = {
+    workspace = {
+      clickItemTo = "select";
+      colorScheme = "Sweet";
+    }
+  }
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";
 
