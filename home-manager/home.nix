@@ -55,6 +55,7 @@
     username = "carlo";
     homeDirectory = "/home/carlo";
     packages = with pkgs; [
+      vlc
       prismlauncher
       chromium
       steam

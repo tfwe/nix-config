@@ -110,7 +110,7 @@
   services.xserver.desktopManager.plasma5.enable = true;
   # services.desktopManager.plasma6.enable = true;
   
-# Enable wayland
+  # Enable wayland
   # programs.xwayland.enable = true;
   # services.xserver.displayManager.gdm.wayland = true;
   # environment.sessionVariables.NIXOS_OZONE_WL = "1"; # for electron apps like discord to work
@@ -227,7 +227,7 @@
       # TODO: Be sure to add any other groups you need (such as networkmanager, audio, docker, etc)
       shell = pkgs.fish;
       extraGroups = [ "networkmanager" "wheel" "dialout" "adbusers" ];
-    };   
+    };
   };
   users.users.root = {
     shell = pkgs.fish;
