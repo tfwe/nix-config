@@ -32,7 +32,6 @@
       outputs.overlays.additions
       outputs.overlays.modifications
       outputs.overlays.unstable-packages
-
       # You can also add overlays exported from other flakes:
       # neovim-nightly-overlay.overlays.default
 
@@ -77,7 +76,7 @@
  
   # Enable networking
   networking.networkmanager.enable = true;
-  networking.nameservers = [ "192.168.2.55" ];
+  # networking.nameservers = [ "192.168.2.55" ];
   hardware.bluetooth.enable = true;
 
   # Set your time zone.
@@ -101,14 +100,15 @@
     SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="057e", ATTRS{idProduct}=="0337", MODE="0666"
   '';
   #enable virtualisation
-  # virtualisation.virtualbox.host.enable = true;
+  virtualisation.virtualbox.host.enable = true;
+  # virtualisation.virtualbox.x11 = true;
   # virtualisation.virtualbox.host.enableExtensionPack = true;
   # users.extraGroups.vboxusers.members = [ "carlo" ];
 
   # Enable the KDE Plasma Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
-  # services.xserver.desktopManager.plasma6.enable = true;
   services.xserver.desktopManager.plasma5.enable = true;
+  # services.desktopManager.plasma6.enable = true;
   
 # Enable wayland
   # programs.xwayland.enable = true;
@@ -141,7 +141,7 @@
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
-
+  
   # Enable sound with pipewire.
   sound.enable = true;
   hardware.pulseaudio.enable = false;
@@ -165,19 +165,21 @@
     roboto
   ];
 
-  fonts.fontconfig.defaultFonts = {
-    monospace = [
-      "Agave"
-      "IPAGothic"
-    ];
-    sansSerif = [
-      "Roboto"
-      "IPAPGothic"
-    ];
-    serif = [
-      "Roboto"
-      "IPAPMincho"
-    ];
+  fonts.fontconfig = {
+    defaultFonts = {
+      monospace = [
+        "Agave"
+        "IPAGothic"
+      ];
+      sansSerif = [
+        "Roboto"
+        "IPAPGothic"
+      ];
+      serif = [
+        "Roboto"
+        "IPAPMincho"
+      ];
+    };
   };
 
 
@@ -224,18 +226,13 @@
       ];
       # TODO: Be sure to add any other groups you need (such as networkmanager, audio, docker, etc)
       shell = pkgs.fish;
-      extraGroups = [ "networkmanager" "wheel" "dialout" ];
+      extraGroups = [ "networkmanager" "wheel" "dialout" "adbusers" ];
     };   
   };
   users.users.root = {
     shell = pkgs.fish;
   };
 
-
-  security.pam.services.kwallet = {
-    name = "kwallet";
-    enableKwallet = false;
-  };
   # This setups a SSH server. Very important if you're setting up a headless system.
   # Feel free to remove if you don't need it.
   services.openssh = {
@@ -254,7 +251,62 @@
   networking.firewall.enable = true;
 
   programs.fuse.userAllowOther = true;
- 
+# RClone Google Drive service
+  systemd.services.rclone-drive-carleton = {
+    # Ensure the service starts after the network is up
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network-online.target" ];
+    requires = [ "network-online.target" ];
+
+    # Service configuration
+    serviceConfig = {
+      Type = "simple";
+      ExecStartPre = "/run/current-system/sw/bin/mkdir -p /home/carlo/Carleton/"; # Creates folder if didn't exist
+      ExecStart = "${pkgs.rclone}/bin/rclone mount Carleton: /home/carlo/Carleton/ --allow-non-empty --allow-other --vfs-cache-mode full"; # Mounts
+      ExecStop = "/run/current-system/sw/bin/fusermount -u /home/carlo/Carleton/"; # Dismounts
+      Restart = "on-failure";
+      RestartSec = "10s";
+      User = "carlo";
+      Group = "users";
+      Environment = [ "PATH=/run/wrappers/bin/:$PATH" ]; # Required environments
+    };
+  };
+  systemd.services.rclone-drive-home = {
+    # Ensure the service starts after the network is up
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network-online.target" ];
+    requires = [ "network-online.target" ];
+
+    # Service configuration
+    serviceConfig = {
+      Type = "simple";
+      ExecStartPre = "/run/current-system/sw/bin/mkdir -p /home/carlo/HomeDrive/"; # Creates folder if didn't exist
+      ExecStart = "${pkgs.rclone}/bin/rclone mount Home: /home/carlo/HomeDrive/ --allow-non-empty --allow-other --vfs-cache-mode full"; # Mounts
+      ExecStop = "/run/current-system/sw/bin/fusermount -u /home/carlo/HomeDrive/"; # Dismounts
+      Restart = "on-failure";
+      RestartSec = "10s";
+      User = "carlo";
+      Group = "users";
+      Environment = [ "PATH=/run/wrappers/bin/:$PATH" ]; # Required environments
+    };
+  };
+
+  # systemd.services.drive = {
+  #   description = "Drive (rclone)";
+  #   after = [ "network.target" ];
+  #   wants = [ "network.target" ];
+  #   wantedBy = [ "multi-user.target" ];
+  #   serviceConfig = {
+  #     Type = "simple";
+  #     User = "carlo";
+  #     ExecStart = ''
+  #     ${pkgs.rclone}/bin/rclone mount --vfs-cache-mode full Carleton: /home/carlo/Carleton/ --allow-non-empty --allow-other
+  #   '';
+  #     ExecStop = "${pkgs.coreutils}/bin/fusermount -u /home/carlo/Carleton/";
+  #     Restart = "on-failure";
+  #     RestartSec = "5";
+  #   };
+  # };
   environment.systemPackages = with pkgs; [
     
     # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
@@ -263,8 +315,7 @@
     lm_sensors
     autoconf
     automake
-    rclone
-    # libsForQt5.bismuth
+    libsForQt5.bismuth
     wget
     htop
     os-prober
@@ -296,6 +347,8 @@
     haskellPackages.QuickCheck
     haskellPackages.GenericPretty
     # autorandr
+    fuse
+    rclone
   ];
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "23.05";

@@ -14,8 +14,14 @@
     home-manager.url = "github:nix-community/home-manager/release-23.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+    openconnect-sso.url = "github:moinakb001/openconnect-sso";
+
     # TODO: Add any other flake you might need
     # hardware.url = "github:nixos/nixos-hardware";
+    
+    plasma-manager.url = "github:mcdonc/plasma-manager/enable-look-and-feel-settings";
+    plasma-manager.inputs.nixpkgs.follows = "nixpkgs";
+    plasma-manager.inputs.home-manager.follows = "home-manager";
 
     # Shameless plug: looking for a way to nixify your themes and make
     # everything match nicely? Try nix-colors!
@@ -26,20 +32,12 @@
     self,
     nixpkgs,
     home-manager,
+    plasma-manager,
     ...
-  } @ inputs: let
+  } @ inputs: 
+  let
     inherit (self) outputs;
-    # Supported systems for your flake packages, shell, etc.
-    systems = [
-      "aarch64-linux"
-      # "i686-linux"
-      "x86_64-linux"
-      # "aarch64-darwin"
-      # "x86_64-darwin"
-    ];
-    # This is a function that generates an attribute by calling a function you
-    # pass to it, with each system as an argument
-    forAllSystems = nixpkgs.lib.genAttrs systems;
+    forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-linux" ];
   in {
     # Your custom packages
     # Accessible through 'nix build', 'nix shell', etc
@@ -66,20 +64,12 @@
         modules = [
           # > Our main nixos configuration file <
           ./nixos/configuration.nix
-        ];
-      };
-    };
-
-    # Standalone home-manager configuration entrypoint
-    # Available through 'home-manager --flake .#your-username@your-hostname'
-    homeConfigurations = {
-      # FIXME replace with your username@hostname
-      "carlo@nixpc" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-        extraSpecialArgs = {inherit inputs outputs;};
-        modules = [
-          # > Our main home-manager configuration file <
-          ./home-manager/home.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.extraSpecialArgs = { inherit inputs outputs; };
+            home-manager.users.carlo.imports = [ ./home-manager/home.nix ];
+            home-manager.sharedModules = [ plasma-manager.homeManagerModules.plasma-manager ];
+          }
         ];
       };
     };

@@ -18,7 +18,6 @@
     
     # You can also split up your configuration and import pieces of it here:
     # ./nvim.nix
-    inputs.plasma-manager.homeManagerModules.plasma-manager
     ./plasma.nix
   ];
 
@@ -29,7 +28,6 @@
       outputs.overlays.additions
       outputs.overlays.modifications
       outputs.overlays.unstable-packages
-
       # You can also add overlays exported from other flakes:
       # neovim-nightly-overlay.overlays.default
 
@@ -46,6 +44,9 @@
       allowUnfree = true;
       # Workaround for https://github.com/nix-community/home-manager/issues/2942
       allowUnfreePredicate = _: true;
+      permittedInsecurePackages = [
+        "electron-25.9.0"
+      ];
     };
   };
 
@@ -60,7 +61,6 @@
       spotify
       audacity
       gimp
-      rclone-browser
       discord
       keepassxc
       obs-studio
@@ -75,16 +75,58 @@
       dolphin-emu
       yuzu-early-access
       jupyter
+      numix-icon-theme-circle
     #  thunderbird
     ];
   };
-
-  # programs.neovim.enable = true;
+  programs.neovim.enable = true;
 
   # Enable home-manager and git
   programs.home-manager.enable = true;
   programs.git.enable = true;
-
+  # home.file."rclone.conf" = {
+  #   target = ".config/rclone/rclone.conf";
+  # };
+  # systemd.user.services.drive = {
+  #   Unit = {
+  #     Description = "Drive (rclone)";
+  #     After = [ "network.target" ];
+  #   };
+  #   Service = {
+  #     Type = "simple";
+  #     ExecStart = ''
+  #     ${pkgs.rclone}/bin/rclone mount --vfs-cache-mode full Carleton: /home/carlo/Carleton/ --allow-non-empty --allow-other
+  #   '';
+  #     Restart = "on-failure";
+  #     RestartSec = "15";
+  #   };
+  #   Install = {
+  #     wantedBy = [ "multi-user.target" ];
+  #   };
+  # };
+    # systemd.user.services.rclone-drive-carleton = {
+    # Unit = {
+    #   Description = "Service that connects to Carleton Google Drive";
+    #   After = [ "network-online.target" ];
+    #   Requires = [ "network-online.target" ];
+    # };
+    # Install = {
+    #   WantedBy = [ "default.target" ];
+    # };
+    # 
+    # Service = let
+    #   gdriveDir = "/home/carlo/Carleton";
+    #   in
+    #   {
+    #     Type = "simple";
+    #     ExecStartPre = "/run/current-system/sw/bin/mkdir -p ${gdriveDir}";
+    #     ExecStart = "${pkgs.rclone}/bin/rclone mount --vfs-cache-mode full Carleton: ${gdriveDir}";
+    #     ExecStop = "/run/current-system/sw/bin/fusermount -u ${gdriveDir}";
+    #     Restart = "on-failure";
+    #     RestartSec = "10s";
+    #     Environment = [ "PATH=/run/wrappers/bin/:$PATH" ];
+    #   };
+    # };
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";
 
