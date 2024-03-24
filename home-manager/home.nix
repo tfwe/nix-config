@@ -19,6 +19,7 @@
     # You can also split up your configuration and import pieces of it here:
     # ./nvim.nix
     ./plasma.nix
+    ./nvim.nix
   ];
 
   nixpkgs = {
@@ -74,17 +75,25 @@
       pspp
       openai-whisper
       dolphin-emu
-      yuzu-early-access
+      inputs.yuzu.packages.${pkgs.system}.early-access
       jupyter
       numix-icon-theme-circle
     #  thunderbird
     ];
   };
-  programs.neovim.enable = true;
 
   # Enable home-manager and git
   programs.home-manager.enable = true;
-  programs.git.enable = true;
+  programs.git = {
+    enable = true;
+    userEmail = "carloflores953@gmail.com";
+    userName = "Carlo";
+    extraConfig = {
+      core = {
+        editor = "nvim";
+      };
+    };
+  };
   # home.file."rclone.conf" = {
   #   target = ".config/rclone/rclone.conf";
   # };

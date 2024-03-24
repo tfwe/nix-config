@@ -23,6 +23,12 @@
     plasma-manager.inputs.nixpkgs.follows = "nixpkgs";
     plasma-manager.inputs.home-manager.follows = "home-manager";
 
+    nix-ld.url = "github:Mic92/nix-ld";
+    # this line assume that you also have nixpkgs as an input
+    nix-ld.inputs.nixpkgs.follows = "nixpkgs";
+
+    yuzu.url = "git+https:///codeberg.org/K900/yuzu-flake";
+
     # Shameless plug: looking for a way to nixify your themes and make
     # everything match nicely? Try nix-colors!
     # nix-colors.url = "github:misterio77/nix-colors";
@@ -33,6 +39,8 @@
     nixpkgs,
     home-manager,
     plasma-manager,
+    nix-ld,
+    yuzu,
     ...
   } @ inputs: 
   let
@@ -70,6 +78,8 @@
             home-manager.users.carlo.imports = [ ./home-manager/home.nix ];
             home-manager.sharedModules = [ plasma-manager.homeManagerModules.plasma-manager ];
           }
+          nix-ld.nixosModules.nix-ld
+          { programs.nix-ld.dev.enable = true; }
         ];
       };
     };
