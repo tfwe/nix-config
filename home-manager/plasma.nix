@@ -51,10 +51,10 @@
       "kded5"."display" = ["Display" "Meta+P"];
       "khotkeys"."{d03619b6-9b3c-48cc-9d9c-a2aadb485550}" = [ ];
       "kmix"."decrease_microphone_volume" = "Microphone Volume Down";
-      "kmix"."decrease_volume" = "Volume Down";
+      "kmix"."decrease_volume" = "Meta+Alt+Down";
       "kmix"."decrease_volume_small" = "Shift+Volume Down";
       "kmix"."increase_microphone_volume" = "Microphone Volume Up";
-      "kmix"."increase_volume" = "Volume Up";
+      "kmix"."increase_volume" = "Meta+Alt+Up";
       "kmix"."increase_volume_small" = "Shift+Volume Up";
       "kmix"."mic_mute" = ["Microphone Mute" "Meta+Volume Mute"];
       "kmix"."mute" = "Volume Mute";
