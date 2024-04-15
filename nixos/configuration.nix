@@ -46,9 +46,12 @@
     config = {
       # Disable if you don't want unfree packages
       allowUnfree = true;
+      cudaSupport = true;
+      permittedInsecurePackages = [
+        "electron-25.9.0"
+      ];
     };
   };
-
   # This will add each flake input as a registry
   # To make nix3 commands consistent with your flake
   nix.registry = (lib.mapAttrs (_: flake: {inherit flake;})) ((lib.filterAttrs (_: lib.isType "flake")) inputs);
@@ -70,8 +73,8 @@
     experimental-features = "nix-command flakes";
     # Deduplicate and optimize nix store
     auto-optimise-store = true;
-  };
-
+    trusted-users = [ "root" "carlo" ];
+  };  
   # FIXME: Add the rest of your current configuration
  
   # Enable networking
@@ -99,6 +102,7 @@
   services.udev.extraRules = ''
     SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="057e", ATTRS{idProduct}=="0337", MODE="0666"
   '';
+
   #enable virtualisation
   virtualisation.virtualbox.host.enable = true;
   # virtualisation.virtualbox.x11 = true;
@@ -115,9 +119,9 @@
   # services.xserver.displayManager.gdm.wayland = true;
   # environment.sessionVariables.NIXOS_OZONE_WL = "1"; # for electron apps like discord to work
   # services.xserver.displayManager.defaultSession = "plasmawayland";
-  
+  hardware.opengl.enable = true;
   hardware.opengl.driSupport32Bit = true;
-
+  hardware.opengl.setLdLibraryPath = true;
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
     package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
@@ -186,7 +190,6 @@
   programs.fish.enable = true; #enable fish shell
   # TODO: Set your hostname
   networking.hostName = "nixpc";
-
  
   # Use the latest kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -202,7 +205,7 @@
     gfxmodeEfi = "auto";
   #  font = "/boot/grub/fonts/agave.pf2";
   };
-  boot.kernelModules = ["coretemp" "nct6775"];
+  boot.kernelModules = ["coretemp" "nct6775" "v4l2loopback-dkms"];
 
   boot.supportedFilesystems = [ "ntfs" ];
 
@@ -222,8 +225,10 @@
       initialPassword = "1121";
       isNormalUser = true;
       openssh.authorizedKeys.keys = [
-        # TODO: Add your SSH public key(s) here, if you plan on using SSH to connect
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP1YxelAH9+KJ0QVy8vAI0D8TXQ2dq5gOwI3o8MaD1B0 carlo"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBeTMqplhVqTXLFzvE5SMnPP+gXkHTZ0wu0gzJlIfHNP carlo" 
       ];
+
       # TODO: Be sure to add any other groups you need (such as networkmanager, audio, docker, etc)
       shell = pkgs.fish;
       extraGroups = [ "networkmanager" "wheel" "dialout" "adbusers" ];
@@ -341,14 +346,27 @@
     rar
     wl-clipboard
     ghc
-    cabal2nix
     nix-prefetch-git
-    cabal-install
-    haskellPackages.QuickCheck
-    haskellPackages.GenericPretty
     # autorandr
     fuse
+    cachix
     rclone
+    # (python3.withPackages (
+    #   ps:
+    #   with ps; [
+    #     matplotlib
+    #     pandas
+    #     numpy
+    #     scikit-learn
+    #     scipy
+    #     tensorflowWithCuda
+    #     keras
+    #     opencv
+    #   ])
+    # )
+    #  thunderbird
+
+
   ];
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "23.05";

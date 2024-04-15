@@ -22,34 +22,34 @@
     ./nvim.nix
   ];
 
-  nixpkgs = {
-    # You can add overlays here
-    overlays = [
-      # Add overlays your own flake exports (from overlays and pkgs dir):
-      outputs.overlays.additions
-      outputs.overlays.modifications
-      outputs.overlays.unstable-packages
-      # You can also add overlays exported from other flakes:
-      # neovim-nightly-overlay.overlays.default
-
-      # Or define it inline, for example:
-      # (final: prev: {
-      #   hi = final.hello.overrideAttrs (oldAttrs: {
-      #     patches = [ ./change-hello-to-hi.patch ];
-      #   });
-      # })
-    ];
-    # Configure your nixpkgs instance
-    config = {
-      # Disable if you don't want unfree packages
-      allowUnfree = true;
-      # Workaround for https://github.com/nix-community/home-manager/issues/2942
-      allowUnfreePredicate = _: true;
-      permittedInsecurePackages = [
-        "electron-25.9.0"
-      ];
-    };
-  };
+  # nixpkgs = {
+  #   # You can add overlays here
+  #   overlays = [
+  #     # Add overlays your own flake exports (from overlays and pkgs dir):
+  #     outputs.overlays.additions
+  #     outputs.overlays.modifications
+  #     outputs.overlays.unstable-packages
+  #     # You can also add overlays exported from other flakes:
+  #     # neovim-nightly-overlay.overlays.default
+  #
+  #     # Or define it inline, for example:
+  #     # (final: prev: {
+  #     #   hi = final.hello.overrideAttrs (oldAttrs: {
+  #     #     patches = [ ./change-hello-to-hi.patch ];
+  #     #   });
+  #     # })
+  #   ];
+  #   # Configure your nixpkgs instance
+  #   config = {
+  #     # Disable if you don't want unfree packages
+  #     allowUnfree = true;
+  #     # Workaround for https://github.com/nix-community/home-manager/issues/2942
+  #     allowUnfreePredicate = _: true;
+  #     permittedInsecurePackages = [
+  #       "electron-25.9.0"
+  #     ];
+  #   };
+  # };
 
   # TODO: Set your username
   home = {
@@ -63,22 +63,21 @@
       spotify
       audacity
       gimp
-      discord
+      (pkgs.discord.override {
+        # remove any overrides that you don't want
+        withOpenASAR = true;
+        withVencord = true;
+      })
       keepassxc
       obs-studio
-      ryujinx
       libreoffice
-      betterdiscordctl
       osu-lazer
       cemu
       obsidian
-      pspp
-      openai-whisper
       dolphin-emu
       inputs.yuzu.packages.${pkgs.system}.early-access
       jupyter
       numix-icon-theme-circle
-    #  thunderbird
     ];
   };
 
