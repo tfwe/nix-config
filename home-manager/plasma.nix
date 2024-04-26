@@ -69,7 +69,7 @@
       "kwin"."Cycle Overview" = [ ];
       "kwin"."Cycle Overview Opposite" = [ ];
       "kwin"."Decrease Opacity" = [ ];
-      "kwin"."Edit Tiles" = "Meta+T";
+      "kwin"."Edit Tiles" = [ ];
       "kwin"."Expose" = "Ctrl+F9";
       "kwin"."ExposeAll" = ["Ctrl+F10" "Launch (C)"];
       "kwin"."ExposeClass" = "Ctrl+F7";
@@ -224,8 +224,8 @@
       "kwin"."view_actual_size" = "Meta+0";
       "kwin"."view_zoom_in" = ["Meta++" "Meta+="];
       "kwin"."view_zoom_out" = "Meta+-";
-      "mediacontrol"."mediavolumedown" = [ ];
-      "mediacontrol"."mediavolumeup" = [ ];
+      "mediacontrol"."mediavolumedown" = "Meta+Alt+PgDown";
+      "mediacontrol"."mediavolumeup" = "Meta+Alt+PgUp";
       "mediacontrol"."nextmedia" = "Meta+Alt+Right";
       "mediacontrol"."pausemedia" = "Media Pause";
       "mediacontrol"."playmedia" = [ ];
