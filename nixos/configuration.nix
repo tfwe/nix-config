@@ -97,6 +97,7 @@
   };
   # Enable the X11 windowing system.
   services.xserver.enable = true;
+  services.joycond.enable = true;
 
   # udev rules
   services.udev.extraRules = ''
@@ -192,7 +193,7 @@
   networking.hostName = "nixpc";
  
   # Use the latest kernel
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages;
 
   # Bootloader.
   boot.loader.efi.canTouchEfiVariables = true;
@@ -211,7 +212,7 @@
 
   swapDevices = [ {
     device = "/var/lib/swapfile";
-    size = 128*1024;
+    size = 64*1024;
   } ];
 
 
@@ -225,9 +226,11 @@
       initialPassword = "1121";
       isNormalUser = true;
       openssh.authorizedKeys.keys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP1YxelAH9+KJ0QVy8vAI0D8TXQ2dq5gOwI3o8MaD1B0 carlo"
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBeTMqplhVqTXLFzvE5SMnPP+gXkHTZ0wu0gzJlIfHNP carlo" 
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP1YxelAH9+KJ0QVy8vAI0D8TXQ2dq5gOwI3o8MaD1B0 carlo" #nixpc
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGhVp5UdVyPEUS8YCFjp5lJ80IA2z1FCPvEME3nkoT8o carlo" #dell xps 
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINqRqwNsWx4CsD3SJK21g1S37YsAgm4oM31KDIgDiO/t JuiceSSH" #pixel6
       ];
+
 
       # TODO: Be sure to add any other groups you need (such as networkmanager, audio, docker, etc)
       shell = pkgs.fish;
@@ -250,8 +253,8 @@
     };
   };
  # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 22 24872 ];
-  networking.firewall.allowedUDPPorts = [ 22 24872 ];
+  networking.firewall.allowedTCPPorts = [ 22 24872 8888 ];
+  networking.firewall.allowedUDPPorts = [ 22 24872 8888 ];
   # Or disable the firewall altogether.
   networking.firewall.enable = true;
 

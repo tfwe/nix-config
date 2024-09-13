@@ -73,7 +73,6 @@
       libreoffice
       osu-lazer
       cemu
-      obsidian
       dolphin-emu
       inputs.yuzu.packages.${pkgs.system}.early-access
       jupyter

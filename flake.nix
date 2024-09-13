@@ -3,7 +3,7 @@
 
   inputs = {
     # Nixpkgs
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
     # nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     # nixpkgs.url = "github:numtide/nixpkgs-unfree/nixos-23.11";
 
@@ -14,7 +14,7 @@
     nixpkgs-unfree.url = "github:SomeoneSerge/nixpkgs-unfree";
     nixpkgs-unfree.inputs.nixpkgs.follows = "nixpkgs-unstable";
     # Home manager
-    home-manager.url = "github:nix-community/home-manager/release-23.11";
+    home-manager.url = "github:nix-community/home-manager/release-24.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     openconnect-sso.url = "github:moinakb001/openconnect-sso";
@@ -64,6 +64,9 @@
   let
     inherit (self) outputs;
     forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-linux" ];
+    system = "x86_64-linux";  # Define the system here
+    pkgs = nixpkgs.legacyPackages.${system};
+    unstable = nixpkgs-unstable.legacyPackages.${system};
   in {
     # Your custom packages
     # Accessible through 'nix build', 'nix shell', etc
@@ -85,13 +88,14 @@
     nixosConfigurations = {
       # FIXME replace with your hostname
       nixpc = nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs outputs;};
+        inherit system;
+        specialArgs = {inherit inputs outputs unstable;};
         modules = [
           # > Our main nixos configuration file <
           ./nixos/configuration.nix
           home-manager.nixosModules.home-manager
           {
-            home-manager.extraSpecialArgs = { inherit inputs outputs; };
+            home-manager.extraSpecialArgs = { inherit inputs outputs unstable; };
             home-manager.users.carlo.imports = [ ./home-manager/home.nix ];
             home-manager.sharedModules = [ plasma-manager.homeManagerModules.plasma-manager ];
             home-manager.useGlobalPkgs = true;

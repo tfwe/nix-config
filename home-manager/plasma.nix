@@ -650,7 +650,6 @@
       "plasma-org.kde.plasma.desktop-appletsrc"."Containments.2.Applets.39.Configuration"."PreloadWeight" = 100;
       "plasma-org.kde.plasma.desktop-appletsrc"."Containments.2.Applets.39.Configuration"."popupHeight" = 450;
       "plasma-org.kde.plasma.desktop-appletsrc"."Containments.2.Applets.39.Configuration"."popupWidth" = 810;
-      "plasma-org.kde.plasma.desktop-appletsrc"."Containments.2.Applets.39.Configuration.Appearance"."selectedTimeZones" = "America/Edmonton,Local";
       "plasma-org.kde.plasma.desktop-appletsrc"."Containments.2.Applets.39.Configuration.Appearance"."wheelChangesTimezone" = true;
       "plasma-org.kde.plasma.desktop-appletsrc"."Containments.2.Applets.39.Configuration.ConfigDialog"."DialogHeight" = 540;
       "plasma-org.kde.plasma.desktop-appletsrc"."Containments.2.Applets.39.Configuration.ConfigDialog"."DialogWidth" = 720;
