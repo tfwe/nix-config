@@ -3,8 +3,8 @@
 let
   # Import the unstable channel with sha256 and system
   unstable = import (fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
-    sha256 = "12c9gz8agsajy6gbaj8m7r69d485pmccjnzgwz0szv6iys6kf812"; # Replace with actual sha256
+    url = "https://github.com/NixOS/nixpkgs/archive/9357f4f23713673f310988025d9dc261c20e70c6.tar.gz";
+    sha256 = "0mr3vfnl8h0214ml7l5hsaq2g9174r3ra0hzcvlqk9kg024siwbf"; # Replace with actual sha256
   }) {
     inherit (pkgs) system;
     config = config.nixpkgs.config or {};

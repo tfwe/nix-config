@@ -1,27 +1,16 @@
-{ pkgs, ... }:
-let
-  netboot = import (pkgs.path + "/nixos/lib/eval-config.nix") {
-      modules = [
-        (pkgs.path + "/nixos/modules/installer/netboot/netboot-minimal.nix")
-        module
-      ];
-    };
-    module = {
-      # you will want to add options here to support your filesystem
-      # and also maybe ssh to let you in
-      boot.supportedFilesystems = [ "zfs" "ntfs" ];
-      # Enable the OpenSSH daemon.
-      services.openssh.enable = true;
-    };
-in {
-  boot.loader.grub.extraEntries = ''
-    menuentry "Nixos Installer" {
-      linux ($drive1)/rescue-kernel init=${netboot.config.system.build.toplevel}/init ${toString netboot.config.boot.kernelParams}
-      initrd ($drive1)/rescue-initrd
-    }
-  '';
-  boot.loader.grub.extraFiles = {
-    "rescue-kernel" = "${netboot.config.system.build.kernel}/bzImage";
-    "rescue-initrd" = "${netboot.config.system.build.netbootRamdisk}/initrd";
+# rescue_boot.nix
+{ config, lib, pkgs, ... }:
+
+{
+  boot.loader.grub = {
+    extraEntries = ''
+      menuentry "NixOS Rescue" {
+        search --set=drive1 --fs-uuid ${config.fileSystems."/boot".device}
+        search --set=drive2 --fs-uuid ${config.fileSystems."/".device}
+        linux ($drive1)/nixos/kernel init=${config.system.build.toplevel}/init systemd.unit=rescue.target
+        initrd ($drive1)/nixos/initrd
+      }
+    '';
+    extraEntriesBeforeNixOS = true;
   };
 }
