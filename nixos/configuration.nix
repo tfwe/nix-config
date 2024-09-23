@@ -189,9 +189,7 @@
 
 
   programs.fish.enable = true; #enable fish shell
-  programs.fish.promptInit = ''
-    fish-nix-shell --info-right | source
-  '';
+
 
   # TODO: Set your hostname
   networking.hostName = "nixpc";
@@ -358,7 +356,7 @@
     fuse
     cachix
     rclone
-    (import (fetchGit "https://github.com/haslersn/fish-nix-shell"))
+
     # (python3.withPackages (
     #   ps:
     #   with ps; [

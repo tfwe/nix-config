@@ -74,12 +74,20 @@
       osu-lazer
       cemu
       dolphin-emu
-      inputs.yuzu.packages.${pkgs.system}.early-access
+      inputs.yuzu.packages.${pkgs.system}.suyu
       jupyter
       numix-icon-theme-circle
+      easyeffects
+      # (import (fetchGit {
+      #   url = "https://github.com/haslersn/fish-nix-shell.git";
+      #   ref = "master";
+      #   rev = "e1ef3d99dcf5a38e30a4bc0abe5bd17931bc1675"; 
+      # }))
     ];
   };
-
+  programs.fish.interactiveShellInit = ''
+    fish-nix-shell --info-right | source
+  '';
   # Enable home-manager and git
   programs.home-manager.enable = true;
   programs.git = {

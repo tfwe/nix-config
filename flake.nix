@@ -86,7 +86,6 @@
     # NixOS configuration entrypoint
     # Available through 'nixos-rebuild --flake .#your-hostname'
     nixosConfigurations = {
-      # FIXME replace with your hostname
       nixpc = nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = {inherit inputs outputs unstable;};
