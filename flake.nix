@@ -26,9 +26,6 @@
     plasma-manager.inputs.nixpkgs.follows = "nixpkgs";
     plasma-manager.inputs.home-manager.follows = "home-manager";
 
-    nix-ld.url = "github:Mic92/nix-ld";
-    # this line assume that you also have nixpkgs as an input
-    nix-ld.inputs.nixpkgs.follows = "nixpkgs";
 
     yuzu.url = "git+https:///codeberg.org/K900/yuzu-flake";
 
@@ -57,7 +54,6 @@
     nixpkgs-unfree,
     home-manager,
     plasma-manager,
-    nix-ld,
     yuzu,
     ...
   } @ inputs: 
@@ -66,7 +62,7 @@
     forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-linux" ];
     system = "x86_64-linux";  # Define the system here
     pkgs = nixpkgs.legacyPackages.${system};
-    unstable = nixpkgs-unstable.legacyPackages.${system};
+    unstable = import nixpkgs-unstable {inherit system; config.allowUnfree = true; };
   in {
     # Your custom packages
     # Accessible through 'nix build', 'nix shell', etc
@@ -98,9 +94,9 @@
             home-manager.users.carlo.imports = [ ./home-manager/home.nix ];
             home-manager.sharedModules = [ plasma-manager.homeManagerModules.plasma-manager ];
             home-manager.useGlobalPkgs = true;
+
           }
-          nix-ld.nixosModules.nix-ld
-          { programs.nix-ld.dev.enable = true; }
+          ./nixos/rescue_boot.nix
         ];
       };
     };

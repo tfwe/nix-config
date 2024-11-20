@@ -6,6 +6,7 @@
   lib,
   config,
   pkgs,
+  unstable,
   ...
 }: {
   # You can import other NixOS modules here
@@ -22,7 +23,6 @@
 
     # Import your generated (nixos-generate-config) hardware configuration
     ./hardware-configuration.nix
-    # ./rescue_boot.nix
   ];
 
   nixpkgs = {
@@ -48,7 +48,7 @@
       allowUnfree = true;
       cudaSupport = true;
       permittedInsecurePackages = [
-        "electron-25.9.0"
+        # "electron-25.9.0"
       ];
     };
   };
@@ -97,9 +97,10 @@
   };
   # Enable the X11 windowing system.
   services.xserver.enable = true;
+
   services.joycond.enable = true;
 
-  # udev rules
+  # udev rules for gamecube controller adapter
   services.udev.extraRules = ''
     SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="057e", ATTRS{idProduct}=="0337", MODE="0666"
   '';
@@ -112,23 +113,22 @@
 
   # Enable the KDE Plasma Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.plasma5.enable = true;
-  # services.desktopManager.plasma6.enable = true;
+  # services.xserver.desktopManager.plasma5.enable = true;
+  services.desktopManager.plasma6.enable = true;
   
   # Enable wayland
-  # programs.xwayland.enable = true;
-  # services.xserver.displayManager.gdm.wayland = true;
-  # environment.sessionVariables.NIXOS_OZONE_WL = "1"; # for electron apps like discord to work
+  programs.xwayland.enable = true;
+  services.xserver.displayManager.gdm.wayland = true;
+  environment.sessionVariables.NIXOS_OZONE_WL = "1"; # for electron apps like discord to work
   # services.xserver.displayManager.defaultSession = "plasmawayland";
   hardware.opengl.enable = true;
   hardware.opengl.driSupport32Bit = true;
   hardware.opengl.setLdLibraryPath = true;
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
-    package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
+    open = false;
     # nvidiaPersistenced = true;
     modesetting.enable = true;
-    prime.nvidiaBusId = "PCI:1:0:0";
     # Fix screen tearing and low refresh rate
     nvidiaSettings = true;
     forceFullCompositionPipeline = true;
@@ -143,13 +143,11 @@
   #     Option "VirtualHeads" "3"
   #   '';
   # };
-
   # Enable CUPS to print documents.
   services.printing.enable = true;
   
   # Enable sound with pipewire.
   sound.enable = true;
-  hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -189,7 +187,9 @@
 
 
   programs.fish.enable = true; #enable fish shell
-
+  programs.fish.interactiveShellInit = ''
+    ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
+  '';
 
   # TODO: Set your hostname
   networking.hostName = "nixpc";
@@ -209,14 +209,13 @@
   #  font = "/boot/grub/fonts/agave.pf2";
   };
   boot.kernelModules = ["coretemp" "nct6775" "v4l2loopback-dkms"];
-
+  boot.blacklistedKernelModules = ["nouveau"];
   boot.supportedFilesystems = [ "ntfs" ];
 
   swapDevices = [ {
     device = "/var/lib/swapfile";
     size = 64*1024;
   } ];
-
 
   # TODO: Configure your system-wide user settings (groups, etc), add more users as needed.
   users.users = {
@@ -228,9 +227,9 @@
       initialPassword = "1121";
       isNormalUser = true;
       openssh.authorizedKeys.keys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP1YxelAH9+KJ0QVy8vAI0D8TXQ2dq5gOwI3o8MaD1B0 carlo" #nixpc
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICcHM3MP5d+Exp4UkUFgb9GmS2SSjyoT/cudskDjkPUe" #nixpi
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGhVp5UdVyPEUS8YCFjp5lJ80IA2z1FCPvEME3nkoT8o carlo" #dell xps 
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINqRqwNsWx4CsD3SJK21g1S37YsAgm4oM31KDIgDiO/t JuiceSSH" #pixel6
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINr5QrsZZfDFjJaqhpnRapaXp+2NYLiB9MEMp2d4W3QW" #pixel 8
       ];
 
 
@@ -242,7 +241,7 @@
   users.users.root = {
     shell = pkgs.fish;
   };
-
+  systemd.user.extraConfig = ''DefaultTimeoutStopSec=10s'';
   # This setups a SSH server. Very important if you're setting up a headless system.
   # Feel free to remove if you don't need it.
   services.openssh = {
@@ -250,13 +249,15 @@
     settings = {
       # Forbid root login through SSH.
       PermitRootLogin = "no";
+      LogLevel = "VERBOSE";
       # Use keys only. Remove if you want to SSH using password (not recommended)
       PasswordAuthentication = false;
     };
   };
+  services.fail2ban.enable = true;
  # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 22 24872 8888 ];
-  networking.firewall.allowedUDPPorts = [ 22 24872 8888 ];
+  networking.firewall.allowedTCPPorts = [ 22 23 24872 8888 ];
+  networking.firewall.allowedUDPPorts = [ 22 23 24872 8888 ];
   # Or disable the firewall altogether.
   networking.firewall.enable = true;
 
@@ -301,22 +302,6 @@
     };
   };
 
-  # systemd.services.drive = {
-  #   description = "Drive (rclone)";
-  #   after = [ "network.target" ];
-  #   wants = [ "network.target" ];
-  #   wantedBy = [ "multi-user.target" ];
-  #   serviceConfig = {
-  #     Type = "simple";
-  #     User = "carlo";
-  #     ExecStart = ''
-  #     ${pkgs.rclone}/bin/rclone mount --vfs-cache-mode full Carleton: /home/carlo/Carleton/ --allow-non-empty --allow-other
-  #   '';
-  #     ExecStop = "${pkgs.coreutils}/bin/fusermount -u /home/carlo/Carleton/";
-  #     Restart = "on-failure";
-  #     RestartSec = "5";
-  #   };
-  # };
   environment.systemPackages = with pkgs; [
     
     # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
@@ -325,7 +310,8 @@
     lm_sensors
     autoconf
     automake
-    libsForQt5.bismuth
+    # libsForQt5.bismuth
+    unstable.polonium
     wget
     htop
     os-prober
@@ -356,23 +342,7 @@
     fuse
     cachix
     rclone
-
-    # (python3.withPackages (
-    #   ps:
-    #   with ps; [
-    #     matplotlib
-    #     pandas
-    #     numpy
-    #     scikit-learn
-    #     scipy
-    #     tensorflowWithCuda
-    #     keras
-    #     opencv
-    #   ])
-    # )
-    #  thunderbird
-
-
+    jdk21_headless 
   ];
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "23.05";

@@ -33,11 +33,12 @@ in
     # allowUnfree = true;
   };
 
-  home.activation = {
-    removeExistingNvimConfig = lib.hm.dag.entryBefore ["checkLinkTargets"] ''
-      $DRY_RUN_CMD rm -rf $VERBOSE_ARG ~/.config/nvim ~/.local/share/nvim
-    '';
-  };
+  # Remove previous configuration before installing new config
+  # home.activation = {
+  #   removeExistingNvimConfig = lib.hm.dag.entryBefore ["checkLinkTargets"] ''
+  #     $DRY_RUN_CMD rm -rf $VERBOSE_ARG ~/.config/nvim ~/.local/share/nvim
+  #   '';
+  # };
 
   programs.neovim = {
     enable = true;
@@ -55,8 +56,8 @@ in
     ];
   };
 
-  xdg.configFile.nvim = {
-    source = nvchad-starter.src;
-    recursive = true;
-  };
+   xdg.configFile.nvim = {
+     source = nvchad-starter.src;
+     recursive = true;
+   };
 }
