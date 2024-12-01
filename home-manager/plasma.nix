@@ -1,6 +1,7 @@
 {
   programs.plasma = {
     enable = true;
+    overrideConfig = true;
     shortcuts = {
       "kmix"."decrease_volume" = "Meta+Alt+Down";
       "kmix"."increase_volume" = "Meta+Alt+Up";
@@ -25,6 +26,10 @@
       "org.kde.spectacle.desktop"."FullScreenScreenShot" = "Shift+Print";
       "org.kde.spectacle.desktop"."RectangularRegionScreenShot" = "Meta+Shift+Print";
       "org.kde.spectacle.desktop"."WindowUnderCursorScreenShot" = "Meta+Ctrl+Print";
+      "kwin"."KrohnkiteShiftDown" = "Meta+Down,none,Krohnkite: Move Down/Next";
+      "kwin"."KrohnkiteShiftLeft" = "Meta+Left,none,Krohnkite: Move Left";
+      "kwin"."KrohnkiteShiftRight" = "Meta+Right,none,Krohnkite: Move Right";
+      "kwin"."KrohnkiteShiftUp" = "Meta+Up,none,Krohnkite: Move Up/Prev";
     };
     configFile = {
       "kdeglobals"."General"."fixed" = "agave Nerd Font Mono,13,-1,5,50,0,0,0,0,0,r";
@@ -52,6 +57,8 @@
       "kwinrc"."Plugins"."diminactiveEnabled" = true;
       "kwinrc"."Plugins"."kwin4_effect_translucencyEnabled" = true;
       "kwinrc"."Plugins"."wobblywindowsEnabled" = true;
+      "kwinrc"."Plugins"."krohnkiteEnabled" = true;
+      "kwinrc"."Script-krohnkite"."maximizeSoleTile" = true;
       "plasma-org.kde.plasma.desktop-appletsrc"."Containments.1"."ItemGeometries-2560x1440" = "Applet-46:1488,16,320,256,0;Applet-51:1488,1088,1056,272,0;Applet-45:1488,288,1056,480,0;Applet-47:1824,16,720,256,0;Applet-49:1488,784,512,288,0;Applet-48:2016,784,528,288,0;";
       "plasma-org.kde.plasma.desktop-appletsrc"."Containments.1"."ItemGeometriesHorizontal" = "Applet-46:1488,16,320,256,0;Applet-51:1488,1088,1056,272,0;Applet-45:1488,288,1056,480,0;Applet-47:1824,16,720,256,0;Applet-49:1488,784,512,288,0;Applet-48:2016,784,528,288,0;";
       "plasma-org.kde.plasma.desktop-appletsrc"."Containments.1.Applets.45"."immutability" = 1;
