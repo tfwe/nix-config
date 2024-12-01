@@ -88,12 +88,14 @@
   # Select internationalisation properties.
   i18n.defaultLocale = "en_CA.utf8";
   i18n.inputMethod = {
-    enabled = "fcitx5";
-    fcitx5.addons = with pkgs; [
-      fcitx5-mozc
-      fcitx5-hangul
-      fcitx5-gtk
-    ];
+    enable = true;
+    type = "fcitx5";
+
+    # fcitx5.addons = with pkgs; [
+    #   fcitx5-mozc
+    #   fcitx5-hangul
+    #   fcitx5-gtk
+    # ];
   };
   # Enable the X11 windowing system.
   services.xserver.enable = true;
@@ -121,9 +123,9 @@
   services.xserver.displayManager.gdm.wayland = true;
   environment.sessionVariables.NIXOS_OZONE_WL = "1"; # for electron apps like discord to work
   # services.xserver.displayManager.defaultSession = "plasmawayland";
-  hardware.opengl.enable = true;
-  hardware.opengl.driSupport32Bit = true;
-  hardware.opengl.setLdLibraryPath = true;
+  hardware.graphics.enable = true;
+  hardware.graphics.enable32Bit = true;
+  # hardware.graphics.setLdLibraryPath = true;
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
     open = false;
@@ -147,7 +149,6 @@
   services.printing.enable = true;
   
   # Enable sound with pipewire.
-  sound.enable = true;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -196,6 +197,8 @@
  
   # Use the latest kernel
   boot.kernelPackages = pkgs.linuxPackages;
+  boot.tmp.useTmpfs = true;
+  boot.tmp.cleanOnBoot = true;
 
   # Bootloader.
   boot.loader.efi.canTouchEfiVariables = true;
@@ -311,7 +314,7 @@
     autoconf
     automake
     # libsForQt5.bismuth
-    unstable.polonium
+    kdePackages.krohnkite
     wget
     htop
     os-prober
@@ -326,7 +329,7 @@
     pciutils
     unzip
     archiver
-    ark
+    kdePackages.ark
     winetricks
     gpp
     gcc
