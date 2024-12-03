@@ -22,7 +22,7 @@
     # TODO: Add any other flake you might need
     # hardware.url = "github:nixos/nixos-hardware";
     
-    plasma-manager.url = "github:mcdonc/plasma-manager/enable-look-and-feel-settings";
+    plasma-manager.url = "github:nix-community/plasma-manager";
     plasma-manager.inputs.nixpkgs.follows = "nixpkgs";
     plasma-manager.inputs.home-manager.follows = "home-manager";
 
@@ -94,7 +94,7 @@
             home-manager.users.carlo.imports = [ ./home-manager/home.nix ];
             home-manager.sharedModules = [ plasma-manager.homeManagerModules.plasma-manager ];
             home-manager.useGlobalPkgs = true;
-
+            home-manager.useUserPackages = true;
           }
           ./nixos/rescue_boot.nix
         ];
