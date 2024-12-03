@@ -205,7 +205,7 @@
               vertical = 16;
             };
             size = {
-              width = 496;
+              width = 480;
               height = 320;
             };
             title = "Memory Usage";
