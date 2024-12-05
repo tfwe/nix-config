@@ -34,6 +34,7 @@
         library = "org.kde.kwin.aurorae";
         theme = "__aurorae__svg__Sweet-Dark";
       };
+      wallpaperBackground.blur = true;
     };
     panels = [
       {
@@ -249,7 +250,7 @@
                 label = "Temp";
               }
             ];
-            textOnlySensors = ["gpu/gpu1/temperature" "gpu/gpu1/usage" "gpu/gpu1/totalVram" "gpu/gpu1/usedVram"];
+            textOnlySensors = ["gpu/gpu1/usedVram" "gpu/gpu1/totalVram"];
           };
         }
       ];
@@ -273,7 +274,7 @@
         };
         temperature = {
           day = 4500;
-          night = 2700;
+          night = 2100;
         };
         transitionTime = 30;
       };
@@ -312,11 +313,15 @@
       "kwin"."KrohnkiteShiftLeft" = "Meta+Left";
       "kwin"."KrohnkiteShiftRight" = "Meta+Right";
       "kwin"."KrohnkiteShiftUp" = "Meta+Up";
+      "ksmserver"."Lock Session" = "";
     };
     configFile = {
       "kwinrc"."Plugins"."krohnkiteEnabled" = true;
       "kwinrc"."Script-krohnkite"."maximizeSoleTile" = true;
       "kwalletrc"."Wallet"."Enabled" = false;
+      "kscreenlockerrc"."Daemon"."Autolock" = false;
+      "kscreenlockerrc"."Daemon"."LockOnResume" = false;
+      "kscreenlockerrc"."Daemon"."Timeout" = 0;
     };
   };
 }
