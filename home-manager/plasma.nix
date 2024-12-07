@@ -264,6 +264,11 @@
       captureRectangularRegion = "Meta+Shift+Print";
       captureWindowUnderCursor = "Meta+Ctrl+Print";
     };
+    powerdevil.AC ={
+      autoSuspend = "nothing";
+      powerProfile = "performance";
+      turnOffDisplay.idleTimeout = "never";
+    };
     kwin = {
       nightLight = {
         enable = true;
