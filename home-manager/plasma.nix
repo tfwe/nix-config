@@ -265,7 +265,7 @@
       captureWindowUnderCursor = "Meta+Ctrl+Print";
     };
     powerdevil.AC ={
-      autoSuspend = "nothing";
+      autoSuspend.action = "nothing";
       powerProfile = "performance";
       turnOffDisplay.idleTimeout = "never";
     };
