@@ -255,6 +255,11 @@
         }
       ];
     };
+    startup.startupScript = {
+      restartkde.text = "";
+      restartkde.restartServices = ["plasma-plasmashell"];
+    };
+
     session = {
       sessionRestore.restoreOpenApplicationsOnLogin = "startWithEmptySession";
     };

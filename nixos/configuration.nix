@@ -328,7 +328,6 @@
     p7zip
     pciutils
     unzip
-    archiver
     kdePackages.ark
     winetricks
     gpp
