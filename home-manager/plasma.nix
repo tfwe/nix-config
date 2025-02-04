@@ -279,8 +279,8 @@
         enable = true;
         mode = "location";
         location = {
-          longitude = "45.416199823401364";
-          latitude = "-75.71475572367211";
+          latitude = "45.416199823401364";
+          longitude = "-75.71475572367211";
         };
         temperature = {
           day = 4500;
